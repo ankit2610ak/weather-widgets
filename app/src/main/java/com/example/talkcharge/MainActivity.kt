@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.talkcharge.databinding.ActivityMainBinding
 import com.example.talkcharge.model.Weather
 import com.example.talkcharge.retrofit.ApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,10 +21,13 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private var lat by Delegates.notNull<Float>()
     private var lon by Delegates.notNull<Float>()
+    lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -49,8 +53,6 @@ class MainActivity : AppCompatActivity() {
                 44
             )
         }
-
-
 
     }
 
