@@ -11,6 +11,17 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/locality_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            android:drawableStart="@android:drawable/ic_menu_mylocation"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="City" />
+
+        <TextView
             android:id="@+id/tempTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
