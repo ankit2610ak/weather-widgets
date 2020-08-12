@@ -21,15 +21,28 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="City" />
 
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/persistent_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:padding="8dp"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="100dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
         <TextView
             android:id="@+id/tempTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="145dp"
+            android:layout_marginTop="14dp"
             android:text="29 *C"
             android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -39,11 +52,342 @@
             android:text="Sunny 34/23*C"
             android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@id/tempTextView"
-            app:layout_constraintStart_toStartOf="@id/tempTextView"
-            />
+            app:layout_constraintStart_toStartOf="@id/tempTextView" />
+
+        <TextView
+            android:id="@+id/todayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="36dp"
+            android:text="Today"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weatherTextView" />
+
+        <TextView
+            android:id="@+id/day1Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Day 1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/todayText"
+            app:layout_constraintTop_toTopOf="@id/todayText" />
+
+        <TextView
+            android:id="@+id/day2Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Day 2"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/day1Text"
+            app:layout_constraintTop_toTopOf="@id/day1Text" />
+
+        <TextView
+            android:id="@+id/day3Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Day 3"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/day2Text"
+            app:layout_constraintTop_toTopOf="@id/day2Text" />
+
+        <TextView
+            android:id="@+id/day4Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Day 4"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/day3Text"
+            app:layout_constraintTop_toTopOf="@id/day3Text" />
+
+        <TextView
+            android:id="@+id/day5Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Day 5"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/day4Text"
+            app:layout_constraintTop_toTopOf="@id/day4Text" />
+
+        <TextView
+            android:id="@+id/tempMinToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/todayText"
+            app:layout_constraintTop_toBottomOf="@id/todayText"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMaxToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tempMinToday"
+            app:layout_constraintTop_toBottomOf="@id/tempMinToday"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMinDay1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/day1Text"
+            app:layout_constraintTop_toBottomOf="@id/day1Text"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMaxDay1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tempMinDay1"
+            app:layout_constraintTop_toBottomOf="@id/tempMinDay1"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMinDay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/day2Text"
+            app:layout_constraintTop_toBottomOf="@id/day2Text"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMaxDay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tempMinDay2"
+            app:layout_constraintTop_toBottomOf="@id/tempMinDay2"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMinDay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/day3Text"
+            app:layout_constraintTop_toBottomOf="@id/day3Text"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMaxDay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tempMinDay3"
+            app:layout_constraintTop_toBottomOf="@id/tempMinDay3"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMinDay4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/day4Text"
+            app:layout_constraintTop_toBottomOf="@id/day4Text"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMaxDay4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tempMinDay4"
+            app:layout_constraintTop_toBottomOf="@id/tempMinDay4"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMinDay5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/day5Text"
+            app:layout_constraintTop_toBottomOf="@id/day5Text"
+            tools:text="23*C" />
+
+        <TextView
+            android:id="@+id/tempMaxDay5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tempMinDay5"
+            app:layout_constraintTop_toBottomOf="@id/tempMinDay5"
+            tools:text="23*C" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Min: "
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tempMinToday" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Max: "
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tempMaxToday" />
+
+        <TextView
+            android:id="@+id/pressureText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="54dp"
+            android:text="Pressure"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tempMaxDay1" />
+
+        <TextView
+            android:id="@+id/pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/pressureText"
+            app:layout_constraintTop_toBottomOf="@id/pressureText"
+            tools:text="Pressure" />
+
+        <TextView
+            android:id="@+id/humidityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Humidity"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/grndLevelText"
+            app:layout_constraintTop_toTopOf="@id/pressureText" />
+
+        <TextView
+            android:id="@+id/humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/humidityText"
+            app:layout_constraintTop_toBottomOf="@id/humidityText"
+            tools:text="Humidity" />
+
+        <TextView
+            android:id="@+id/seaLevelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Sea Level"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pressure" />
+
+        <TextView
+            android:id="@+id/seaLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/seaLevelText"
+            app:layout_constraintTop_toBottomOf="@id/seaLevelText"
+            tools:text="Sea Level" />
+
+        <TextView
+            android:id="@+id/grndLevelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Ground Level"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/seaLevelText" />
+
+        <TextView
+            android:id="@+id/grndLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/grndLevelText"
+            app:layout_constraintTop_toBottomOf="@id/grndLevelText"
+            tools:text="grnd level" />
+
+        <TextView
+            android:id="@+id/windText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Wind speed"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seaLevel" />
+
+        <TextView
+            android:id="@+id/wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/windText"
+            app:layout_constraintTop_toBottomOf="@id/windText"
+            tools:text="wind" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <include layout="@layout/my_persistent_bottomsheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
