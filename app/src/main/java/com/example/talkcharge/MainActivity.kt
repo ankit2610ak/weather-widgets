@@ -1,6 +1,7 @@
 package com.example.talkcharge
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -16,8 +17,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Response
+import java.math.BigDecimal
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, t.message.toString())
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onResponse(
                 call: Call<Weather>,
                 response: Response<Weather>
@@ -81,10 +83,32 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, response.body()!!.list[1].dt_txt)
                 val arrayList: ArrayList<WeatherList> = response.body()!!.list
                 setWeatherFields(arrayList)
+                getMaxMinTempForAllDays(arrayList)
+                binding.tempTextView.text =
+                    "" + arrayList[0].main.temp.subtract(BigDecimal(273.15)).toFloat() + "°C"
+
+                binding.weatherTextView.text = arrayList[0].weather[0].main +" "+
+                        arrayList[0].main.temp_max.subtract(BigDecimal(273.15)).toInt() + " / " +
+                        arrayList[0].main.temp_min.subtract(BigDecimal(273.15)).toInt()+ "°C"
 
             }
 
         })
+    }
+
+    private fun getMaxMinTempForAllDays(arrayList: ArrayList<WeatherList>) {
+        binding.tempMaxToday.text = arrayList[0].main.temp_max.toPlainString()
+        binding.tempMinToday.text = arrayList[0].main.temp_min.toPlainString()
+        binding.tempMaxDay1.text = arrayList[8].main.temp_max.toPlainString()
+        binding.tempMinDay1.text = arrayList[8].main.temp_min.toPlainString()
+        binding.tempMaxDay2.text = arrayList[15].main.temp_max.toPlainString()
+        binding.tempMinDay2.text = arrayList[15].main.temp_min.toPlainString()
+        binding.tempMaxDay3.text = arrayList[23].main.temp_max.toPlainString()
+        binding.tempMinDay3.text = arrayList[23].main.temp_min.toPlainString()
+        binding.tempMaxDay4.text = arrayList[31].main.temp_max.toPlainString()
+        binding.tempMinDay4.text = arrayList[31].main.temp_min.toPlainString()
+        binding.tempMaxDay5.text = arrayList[39].main.temp_max.toPlainString()
+        binding.tempMinDay5.text = arrayList[39].main.temp_min.toPlainString()
     }
 
     private fun setWeatherFields(arrayList: ArrayList<WeatherList>) {
