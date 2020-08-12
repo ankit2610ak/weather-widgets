@@ -10,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.talkcharge.databinding.ActivityMainBinding
 import com.example.talkcharge.model.Weather
+import com.example.talkcharge.model.WeatherList
 import com.example.talkcharge.retrofit.ApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -77,9 +79,20 @@ class MainActivity : AppCompatActivity() {
                 response: Response<Weather>
             ) {
                 Log.d(TAG, response.body()!!.list[1].dt_txt)
+                val arrayList: ArrayList<WeatherList> = response.body()!!.list
+                setWeatherFields(arrayList)
+
             }
 
         })
+    }
+
+    private fun setWeatherFields(arrayList: ArrayList<WeatherList>) {
+        binding.grndLevel.text = arrayList[0].main.grnd_level.toString()
+        binding.humidity.text = arrayList[0].main.humidity.toString()
+        binding.pressure.text = arrayList[0].main.pressure.toString()
+        binding.seaLevel.text = arrayList[0].main.sea_level.toString()
+        binding.wind.text = arrayList[0].wind.speed.toString()
     }
 
 }
