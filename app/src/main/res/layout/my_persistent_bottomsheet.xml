@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     app:behavior_hideable="false"
     android:background="@android:color/holo_blue_light"
     app:behavior_peekHeight="84dp"
@@ -12,7 +13,7 @@
         android:id="@+id/todayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
         android:text="Today"
         android:textColor="@android:color/black"
@@ -74,6 +75,159 @@
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/day4Text"
         app:layout_constraintTop_toTopOf="@id/day4Text" />
+
+    <TextView
+        android:id="@+id/tempMinToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/todayText"
+        app:layout_constraintTop_toBottomOf="@id/todayText"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMaxToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tempMinToday"
+        app:layout_constraintTop_toBottomOf="@id/tempMinToday"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMinDay1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/day1Text"
+        app:layout_constraintTop_toBottomOf="@id/day1Text"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMaxDay1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tempMinDay1"
+        app:layout_constraintTop_toBottomOf="@id/tempMinDay1"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMinDay2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/day2Text"
+        app:layout_constraintTop_toBottomOf="@id/day2Text"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMaxDay2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tempMinDay2"
+        app:layout_constraintTop_toBottomOf="@id/tempMinDay2"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMinDay3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/day3Text"
+        app:layout_constraintTop_toBottomOf="@id/day3Text"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMaxDay3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tempMinDay3"
+        app:layout_constraintTop_toBottomOf="@id/tempMinDay3"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMinDay4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/day4Text"
+        app:layout_constraintTop_toBottomOf="@id/day4Text"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMaxDay4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tempMinDay4"
+        app:layout_constraintTop_toBottomOf="@id/tempMinDay4"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMinDay5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/day5Text"
+        app:layout_constraintTop_toBottomOf="@id/day5Text"
+        tools:text="23*C" />
+
+    <TextView
+        android:id="@+id/tempMaxDay5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tempMinDay5"
+        app:layout_constraintTop_toBottomOf="@id/tempMinDay5"
+        tools:text="23*C" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Min: "
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tempMinToday" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Max: "
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tempMaxToday" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
