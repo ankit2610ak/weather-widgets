@@ -51,12 +51,10 @@ class MainActivity : AppCompatActivity() {
                         location.latitude, location.longitude, 1)
                     binding.localityTextView.text = addresses[0].locality
 
-
                     getWeatherDetails(
                         lat,
                         lon,
-                        "b426a7540d88be5d89c501c685cee1e7"
-                    )
+                        "b426a7540d88be5d89c501c685cee1e7")
                 }
 
         } else {
@@ -75,7 +73,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, t.message.toString())
             }
 
-            @SuppressLint("SetTextI18n")
             override fun onResponse(
                 call: Call<Weather>,
                 response: Response<Weather>
@@ -84,16 +81,21 @@ class MainActivity : AppCompatActivity() {
                 val arrayList: ArrayList<WeatherList> = response.body()!!.list
                 setWeatherFields(arrayList)
                 getMaxMinTempForAllDays(arrayList)
-                binding.tempTextView.text =
-                    "" + arrayList[0].main.temp.subtract(BigDecimal(273.15)).toFloat() + "°C"
-
-                binding.weatherTextView.text = arrayList[0].weather[0].main +" "+
-                        arrayList[0].main.temp_max.subtract(BigDecimal(273.15)).toInt() + " / " +
-                        arrayList[0].main.temp_min.subtract(BigDecimal(273.15)).toInt()+ "°C"
+                getTodayWeatherAndTemperature(arrayList)
 
             }
 
         })
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getTodayWeatherAndTemperature(arrayList: ArrayList<WeatherList>) {
+        binding.tempTextView.text =
+            "" + arrayList[0].main.temp.subtract(BigDecimal(273.15)).toInt() + "°C"
+
+        binding.weatherTextView.text = arrayList[0].weather[0].main + " " +
+                arrayList[0].main.temp_max.subtract(BigDecimal(273.15)).toInt() + " / " +
+                arrayList[0].main.temp_min.subtract(BigDecimal(273.15)).toInt() + "°C"
     }
 
     private fun getMaxMinTempForAllDays(arrayList: ArrayList<WeatherList>) {
@@ -116,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         binding.humidity.text = arrayList[0].main.humidity.toString()
         binding.pressure.text = arrayList[0].main.pressure.toString()
         binding.seaLevel.text = arrayList[0].main.sea_level.toString()
-        binding.wind.text = arrayList[0].wind.speed.toString()
+        binding.wind.text = arrayList[0].wind.speed.toPlainString()
     }
 
 }
