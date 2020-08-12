@@ -2,11 +2,15 @@ package com.example.talkcharge
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.talkcharge.databinding.ActivityMainBinding
@@ -27,45 +31,120 @@ class MainActivity : AppCompatActivity() {
     private var lat by Delegates.notNull<Float>()
     private var lon by Delegates.notNull<Float>()
     lateinit var binding: ActivityMainBinding
+    private val sharedPrefFile = "sharedpreference"
+    lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferences = getSharedPreferences("sharedpreference", Context.MODE_PRIVATE)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationProviderClient!!.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    // Got last known location. In some rare situations this can be null.
-                    Log.d(TAG, "lat: " + location?.latitude)
-                    lat = location?.latitude!!.toFloat()
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!checkPermissions()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions()
+            }
+        } else {
+            getLastLocation()
+        }
+    }
+
+    private fun requestPermissions() {
+        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.")
+            showSnackbar("Location permission is needed for core functionality")
+        } else {
+            Log.i(TAG, "Requesting permission")
+            startLocationPermissionRequest()
+        }
+    }
+
+    private fun startLocationPermissionRequest() {
+        ActivityCompat.requestPermissions(
+            this@MainActivity,
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            REQUEST_PERMISSIONS_REQUEST_CODE
+        )
+    }
+
+
+    private fun showSnackbar(mainTextStringId: String) {
+        Toast.makeText(this@MainActivity, mainTextStringId, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        Log.i(TAG, "onRequestPermissionResult")
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            when {
+                grantResults.isEmpty() -> {
+                    // If user interaction was interrupted, the permission request is cancelled and you
+                    // receive empty arrays.
+                    Log.i(TAG, "User interaction was cancelled.")
+                }
+                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission granted.
+                    getLastLocation()
+                }
+                else -> {
+                    showSnackbar("Permission was denied")
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        fusedLocationProviderClient!!.lastLocation
+            .addOnSuccessListener { location: Location? ->
+
+                if (location != null) {
+                    lat = location.latitude.toFloat()
                     lon = location.longitude.toFloat()
 
                     // Add locality
                     val geocoder = Geocoder(this, Locale.getDefault())
                     val addresses = geocoder.getFromLocation(
-                        location.latitude, location.longitude, 1)
+                        location.latitude, location.longitude, 1
+                    )
                     binding.localityTextView.text = addresses[0].locality
-
+                    val editor = sharedPreferences.edit()
+                    editor.putFloat("lat", location.latitude.toFloat())
+                    editor.putFloat("lon", location.longitude.toFloat())
+                    editor.putString("locality", addresses[0].locality)
+                    editor.apply()
 
                     getWeatherDetails(
                         lat,
                         lon,
                         "b426a7540d88be5d89c501c685cee1e7"
                     )
+
                 }
 
-        } else {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                44
-            )
-        }
+            }
+    }
 
+    private fun checkPermissions(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        return permissionState == PackageManager.PERMISSION_GRANTED
     }
 
     private fun getWeatherDetails(lat: Float, lon: Float, appId: String) {
@@ -75,7 +154,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, t.message.toString())
             }
 
-            @SuppressLint("SetTextI18n")
             override fun onResponse(
                 call: Call<Weather>,
                 response: Response<Weather>
@@ -84,16 +162,21 @@ class MainActivity : AppCompatActivity() {
                 val arrayList: ArrayList<WeatherList> = response.body()!!.list
                 setWeatherFields(arrayList)
                 getMaxMinTempForAllDays(arrayList)
-                binding.tempTextView.text =
-                    "" + arrayList[0].main.temp.subtract(BigDecimal(273.15)).toFloat() + "°C"
-
-                binding.weatherTextView.text = arrayList[0].weather[0].main +" "+
-                        arrayList[0].main.temp_max.subtract(BigDecimal(273.15)).toInt() + " / " +
-                        arrayList[0].main.temp_min.subtract(BigDecimal(273.15)).toInt()+ "°C"
+                getTodayWeatherAndTemperature(arrayList)
 
             }
 
         })
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getTodayWeatherAndTemperature(arrayList: ArrayList<WeatherList>) {
+        binding.tempTextView.text =
+            "" + arrayList[0].main.temp.subtract(BigDecimal(273.15)).toInt() + "°C"
+
+        binding.weatherTextView.text = arrayList[0].weather[0].main + " " +
+                arrayList[0].main.temp_max.subtract(BigDecimal(273.15)).toInt() + " / " +
+                arrayList[0].main.temp_min.subtract(BigDecimal(273.15)).toInt() + "°C"
     }
 
     private fun getMaxMinTempForAllDays(arrayList: ArrayList<WeatherList>) {
@@ -116,7 +199,11 @@ class MainActivity : AppCompatActivity() {
         binding.humidity.text = arrayList[0].main.humidity.toString()
         binding.pressure.text = arrayList[0].main.pressure.toString()
         binding.seaLevel.text = arrayList[0].main.sea_level.toString()
-        binding.wind.text = arrayList[0].wind.speed.toString()
+        binding.wind.text = arrayList[0].wind.speed.toPlainString()
+    }
+
+    companion object {
+        private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     }
 
 }
