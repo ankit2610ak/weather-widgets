@@ -3,10 +3,13 @@ package com.example.talkcharge
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +23,9 @@ import com.example.talkcharge.model.Weather
 import com.example.talkcharge.model.WeatherList
 import com.example.talkcharge.retrofit.ApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Response
 import java.math.BigDecimal
@@ -34,19 +39,19 @@ class MainActivity : AppCompatActivity() {
     private var lat by Delegates.notNull<Float>()
     private var lon by Delegates.notNull<Float>()
     lateinit var binding: ActivityMainBinding
-    private val sharedPrefFile = "sharedpreference"
-    lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sharedPreferences = getSharedPreferences("sharedpreference", Context.MODE_PRIVATE)
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         getLocationPermission()
+        binding.localityTextView.setOnClickListener {
+            getLocationPermission()
+
+        }
 
 
     }
@@ -129,8 +134,7 @@ class MainActivity : AppCompatActivity() {
                     // Permission is granted. Continue the action or workflow
                     // in your app.
 
-                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_LONG).show()
-
+                    Toast.makeText(this, "Permission Granted , Please press Location Button", Toast.LENGTH_LONG).show()
 
 
                 } else {
