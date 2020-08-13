@@ -3,18 +3,18 @@ package com.example.talkcharge
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.talkcharge.databinding.ActivityMainBinding
 import com.example.talkcharge.model.Weather
 import com.example.talkcharge.model.WeatherList
@@ -27,7 +27,7 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.properties.Delegates
 
-
+@RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : AppCompatActivity() {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private val TAG = "MainActivity"
@@ -46,108 +46,110 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
+        getLocationPermission()
+
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (!checkPermissions()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions()
+    private fun getLocationPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // You can use the API that requires the permission.
+                fusedLocationProviderClient!!.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+
+                        if (location != null) {
+                            lat = location.latitude.toFloat()
+                            lon = location.longitude.toFloat()
+
+                            // Add locality
+                            val geocoder = Geocoder(this, Locale.getDefault())
+                            val addresses = geocoder.getFromLocation(
+                                location.latitude, location.longitude, 1
+                            )
+                            binding.localityTextView.text = addresses[0].locality
+
+                            getWeatherDetails(
+                                lat,
+                                lon,
+                                "b426a7540d88be5d89c501c685cee1e7"
+                            )
+
+                        }
+                    }
             }
-        } else {
-            getLastLocation()
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+            -> {
+                // In an educational UI, explain to the user why your app requires this
+                // permission for a specific feature to behave as expected. In this UI,
+                // include a "cancel" or "no thanks" button that allows the user to
+                // continue using your app without granting the permission.
+                AlertDialog.Builder(this)
+                    .setTitle("Required Location Permission")
+                    .setMessage("You have to give this permission to acess this feature")
+                    .setPositiveButton(
+                        "OK"
+                    ) { _, _ ->
+                        requestPermissions(
+                            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                            REQUEST_PERMISSIONS_REQUEST_CODE
+                        )
+                    }
+                    .setNegativeButton(
+                        "Cancel"
+                    ) { dialogInterface, _ -> dialogInterface.dismiss() }
+                    .create()
+                    .show()
+
+
+            }
+            else -> {
+                // You can directly ask for the permission.
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_PERMISSIONS_REQUEST_CODE
+                )
+            }
         }
-    }
-
-    private fun requestPermissions() {
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.")
-            showSnackbar("Location permission is needed for core functionality")
-        } else {
-            Log.i(TAG, "Requesting permission")
-            startLocationPermissionRequest()
-        }
-    }
-
-    private fun startLocationPermissionRequest() {
-        ActivityCompat.requestPermissions(
-            this@MainActivity,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_PERMISSIONS_REQUEST_CODE
-        )
-    }
-
-
-    private fun showSnackbar(mainTextStringId: String) {
-        Toast.makeText(this@MainActivity, mainTextStringId, Toast.LENGTH_LONG).show()
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
     ) {
-        Log.i(TAG, "onRequestPermissionResult")
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            when {
-                grantResults.isEmpty() -> {
-                    Log.i(TAG, "User interaction was cancelled.")
-                }
-                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    startActivity(intent)
+        when (requestCode) {
+            REQUEST_PERMISSIONS_REQUEST_CODE -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
 
-                    getLastLocation()
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_LONG).show()
+
+
+
+                } else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    Toast.makeText(this, "Please on your GPS in your system", Toast.LENGTH_LONG).show()
                 }
-                else -> {
-                    showSnackbar("Permission was denied")
-                }
+                return
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
             }
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        fusedLocationProviderClient!!.lastLocation
-            .addOnSuccessListener { location: Location? ->
-
-                if (location != null) {
-                    lat = location.latitude.toFloat()
-                    lon = location.longitude.toFloat()
-
-                    // Add locality
-                    val geocoder = Geocoder(this, Locale.getDefault())
-                    val addresses = geocoder.getFromLocation(
-                        location.latitude, location.longitude, 1
-                    )
-                    binding.localityTextView.text = addresses[0].locality
-                    val editor = sharedPreferences.edit()
-                    editor.putFloat("lat", location.latitude.toFloat())
-                    editor.putFloat("lon", location.longitude.toFloat())
-                    editor.putString("locality", addresses[0].locality)
-                    editor.apply()
-
-                    getWeatherDetails(
-                        lat,
-                        lon,
-                        "b426a7540d88be5d89c501c685cee1e7"
-                    )
-
-                }
-
-            }
-    }
-
-    private fun checkPermissions(): Boolean {
-        val permissionState = ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        return permissionState == PackageManager.PERMISSION_GRANTED
     }
 
     private fun getWeatherDetails(lat: Float, lon: Float, appId: String) {
