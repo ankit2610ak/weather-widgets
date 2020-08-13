@@ -95,12 +95,9 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             when {
                 grantResults.isEmpty() -> {
-                    // If user interaction was interrupted, the permission request is cancelled and you
-                    // receive empty arrays.
                     Log.i(TAG, "User interaction was cancelled.")
                 }
                 grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    // Permission granted.
                     val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     startActivity(intent)
 
