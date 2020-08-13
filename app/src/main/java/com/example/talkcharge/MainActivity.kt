@@ -2,6 +2,8 @@ package com.example.talkcharge
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -29,14 +31,18 @@ class MainActivity : AppCompatActivity() {
     private var lat by Delegates.notNull<Float>()
     private var lon by Delegates.notNull<Float>()
     lateinit var binding: ActivityMainBinding
+    private val sharedPrefFile = "sharedpreference"
+    lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferences = getSharedPreferences("sharedpreference", Context.MODE_PRIVATE)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
 
     }
 
@@ -105,21 +111,31 @@ class MainActivity : AppCompatActivity() {
     private fun getLastLocation() {
         fusedLocationProviderClient!!.lastLocation
             .addOnSuccessListener { location: Location? ->
-                lat = location?.latitude!!.toFloat()
-                lon = location.longitude.toFloat()
 
-                // Add locality
-                val geocoder = Geocoder(this, Locale.getDefault())
-                val addresses = geocoder.getFromLocation(
-                    location.latitude, location.longitude, 1
-                )
-                binding.localityTextView.text = addresses[0].locality
+                if (location != null) {
+                    lat = location.latitude.toFloat()
+                    lon = location.longitude.toFloat()
 
-                getWeatherDetails(
-                    lat,
-                    lon,
-                    "b426a7540d88be5d89c501c685cee1e7"
-                )
+                    // Add locality
+                    val geocoder = Geocoder(this, Locale.getDefault())
+                    val addresses = geocoder.getFromLocation(
+                        location.latitude, location.longitude, 1
+                    )
+                    binding.localityTextView.text = addresses[0].locality
+                    val editor = sharedPreferences.edit()
+                    editor.putFloat("lat", location.latitude.toFloat())
+                    editor.putFloat("lon", location.longitude.toFloat())
+                    editor.putString("locality", addresses[0].locality)
+                    editor.apply()
+
+                    getWeatherDetails(
+                        lat,
+                        lon,
+                        "b426a7540d88be5d89c501c685cee1e7"
+                    )
+
+                }
+
             }
     }
 
