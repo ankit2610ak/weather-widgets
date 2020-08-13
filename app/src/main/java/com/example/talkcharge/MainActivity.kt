@@ -3,12 +3,14 @@ package com.example.talkcharge
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +26,7 @@ import retrofit2.Response
 import java.math.BigDecimal
 import java.util.*
 import kotlin.properties.Delegates
+
 
 class MainActivity : AppCompatActivity() {
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestPermissions() {
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
             this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.")
@@ -74,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     private fun startLocationPermissionRequest() {
         ActivityCompat.requestPermissions(
             this@MainActivity,
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             REQUEST_PERMISSIONS_REQUEST_CODE
         )
     }
@@ -92,12 +95,12 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             when {
                 grantResults.isEmpty() -> {
-                    // If user interaction was interrupted, the permission request is cancelled and you
-                    // receive empty arrays.
                     Log.i(TAG, "User interaction was cancelled.")
                 }
                 grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    // Permission granted.
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+
                     getLastLocation()
                 }
                 else -> {
